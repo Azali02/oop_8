@@ -13,7 +13,12 @@ namespace oop4_1.FactoryMethod
         {
             Figure shape = null;
             string[] words = code.Split(' ');
-            char f = char.Parse(words[0]);   //words[0].ToCharArray()[0];
+            char f = char.Parse(words[0]);
+            if ( f == 'G')
+            {
+                shape = new GGroup();
+                return shape;
+            }
             int x = int.Parse(words[1]);
             int y = int.Parse(words[2]);
             int a = int.Parse(words[3]);
