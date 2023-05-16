@@ -14,5 +14,6 @@ namespace oop4_1.Observers
         void OnSubjectSelect(Observable who);
 
         void OnSubjectMove(int x, int y, int widht, int height);
+        void OnSubjectSizeUp(int a, int widht, int height);
     }
 }

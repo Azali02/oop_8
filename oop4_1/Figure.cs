@@ -28,12 +28,14 @@ namespace oop4_1
         }
         public virtual bool canSizeUp(int add, int widht, int height) //проверка выхода за область при увеличении
         {
+            NotifyEveryoneSizeUp(add, widht, height);
             return x - add - 3 - a / 2 <= 0 ||
                 y - add - 3 - a / 2 <= 0 || x + add + 3 + a / 2 >= widht ||
                 y + add + 3 + a / 2 >= height;
         }
         public virtual bool canMove(int add_X, int add_Y, int widht, int height)   //проверка выхода за область при перемещении
         {
+            NotifyEveryoneMove(add_X, add_Y, widht, height);
             return x + add_X - 3 - a / 2 <= 0 ||
                 y + add_Y - 3 - a / 2 <= 0 || x + add_X + 3 + a / 2 >= widht ||
                 y + add_Y + 3 + a / 2 >= height;
@@ -59,6 +61,10 @@ namespace oop4_1
         public void OnSubjectSelect(Observable who)
         {
             return;
+        }
+        public void OnSubjectSizeUp(int a, int widht, int height)
+        {
+            SizeUp(a, widht, height);
         }
 
         public void OnSubjectMove(int x, int y, int widht, int height)

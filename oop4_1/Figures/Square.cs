@@ -9,11 +9,14 @@ namespace oop4_1.Figures
 {
     internal class Square : Figure
     {
+        public int k = 1;
         public Square(int x, int y)
         {
             this.x = x;
             this.y = y;
             pen = new Pen(Color.Red, 3);
+            this._name = "Square " + k.ToString();
+            this.k += 1;
         }
         public override void Draw(Graphics g)
         {

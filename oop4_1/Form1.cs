@@ -223,7 +223,7 @@ namespace oop4_1
                         Line line = new Line();
                         line.addLine(shape[0], shape[1]);
                         figure.Add(line);
-                        line.NotifyEveryone();
+                        //line.NotifyEveryone();
                         //figure.RemoveAll(f => shape.Contains(f));
                         ClickLine = false;
                         Refresh();

@@ -9,8 +9,13 @@ namespace oop4_1.Figures
 {
     internal class GGroup : Figure
     {
+        public int k = 1;
         public List<Figure> _gGroup = new List<Figure>();
-
+        public GGroup() 
+        {
+            this._name = "Group " + k.ToString();
+            this.k += 1;
+        }
 
         public void Add(Figure figure)
         {

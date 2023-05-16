@@ -55,10 +55,10 @@ namespace oop4_1.Figures
             return;
         }
 
-        public void Del()
-        {
-            shape1.RemoveObserver();
-            shape2.RemoveObserver();
-        }
+        //public void Del()
+        //{
+        //    shape1.RemoveObserver();
+        //    shape2.RemoveObserver();
+        //}
     }
 }

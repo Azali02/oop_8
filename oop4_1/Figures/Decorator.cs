@@ -22,6 +22,7 @@ namespace oop4_1.Figures
             a = shape.a + 10;
             pp = new Pen(Color.Black);
             pp.DashStyle = DashStyle.Dash;
+            this._name = _shape._name;
         }
         public override void Draw(Graphics g)
         {
@@ -49,7 +50,7 @@ namespace oop4_1.Figures
             if (!_shape.canSizeUp(add, widht, height))
             {
                 _shape.SizeUp(add, widht, height);
-                base.SizeUp(add, widht, height);
+                a = _shape.a + 10;
             }
         }
         public override void move(int add_X, int add_Y, int widht, int height)
