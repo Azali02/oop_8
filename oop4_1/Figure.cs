@@ -42,7 +42,10 @@ namespace oop4_1
         }
         public virtual void SetColor(Color color) { pen.Color = color; }   //установка цвета
         public Color GetColor() { return pen.Color; }  //определение цвета
-        public abstract void Save(string filename);
+        public virtual void Save(string filename)
+        {
+            return;
+        }
         public string ColorCode()
         {
             if (pen.Color == Color.Red) { return "R"; }

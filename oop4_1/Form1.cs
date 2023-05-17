@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Diagnostics.Metrics;
 using System.Windows.Forms;
 using oop4_1.FactoryMethod;
 using oop4_1.Figures;
+using oop4_1.Observers;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace oop4_1
@@ -12,17 +15,26 @@ namespace oop4_1
     public partial class Form1 : Form
     {
 
-        enum FigureType { Circle, Square, Triangle }
-        private FigureType currentFigure;
+        //enum FigureType { Circle, Square, Triangle }
+        //private FigureType currentFigure;
 
-        private List<Figure> figure = new List<Figure>();  //создаем список объектов
-        private string filename = "C:/Users/Азалия/source/repos/oop4_1/oop4_1/FactoryMethod/save_figures.txt";
+        //private List<Figure> figure = new List<Figure>();  //создаем список объектов
+        //private string filename = "C:/Users/Азалия/source/repos/oop4_1/oop4_1/FactoryMethod/save_figures.txt";
+
+        Container container;
+        //TreeViewObserver observer;
+        bool ctrlpress = false;// флажок зажатия контрола
         bool ClickLine = false;
+        string fType = "Circle";
 
         public Form1()
         {
             InitializeComponent();
             cbColor.SelectedIndex = 0;
+
+            //observer = new TreeViewObserver(shapeTree);
+            //container = new Container(observer);
+            container = new Container();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)  //описание события нажатия клавиши на клавиатуре
@@ -30,241 +42,107 @@ namespace oop4_1
             if (ModifierKeys == Keys.Control)  //для Control
             {
                 chb_Ctrl.Checked = true;
+                ctrlpress = true;
+                container.ctrlChange();
             }
             else if (e.KeyCode == Keys.Delete)  //для Delete
             {
-                int count = 0;
-                for (int i = 0; i < figure.Count;)
-                {
-                    if (figure[i].DecoratorCheck())
-                    {
-                        figure.RemoveAt(i);
-                        count++;
-                        continue;
-                    }
-                    ++i;
-                }
-                if (figure.Count != 0 && count > 0)
-                {
-                    Figure decoratedFigure = new Decorator(figure.Last());
-                    figure.RemoveAt(figure.Count - 1); // удалить последний элемент из списка
-                    figure.Add(decoratedFigure); // добавить декорированный объект в список
-                }
+                container.delSelected();
                 Refresh();
             }
             else if (e.KeyCode == Keys.Z) //уменьшение выделенных объектов
             {
-                foreach (Figure f in figure)
-                {
-                    if (f.DecoratorCheck())
-                    {
-                        f.SizeUp(-2, pictureBox1.Width, pictureBox1.Height);
-                    }
-                    Refresh();
-                }
+                container.SizeUp(-2, pictureBox1.Width, pictureBox1.Height);
+                Refresh();
             }
             else if (e.KeyCode == Keys.X) //увеличение выделенных объектов
             {
-                foreach (Figure f in figure)
-                {
-                    if (f.DecoratorCheck())
-                    {
-                        f.SizeUp(2, pictureBox1.Width, pictureBox1.Height);
-                    }
-                }
+                container.SizeUp(2, pictureBox1.Width, pictureBox1.Height);
                 Refresh();
             }
             else if (e.KeyCode == Keys.A)
-            {
-                foreach (Figure f in figure)
-                {
-                    if (f.DecoratorCheck())
-                    {
-                        f.move(-2, 0, pictureBox1.Width, pictureBox1.Height);
-                    }
-                }
+            {      
+                container.move(-2, 0, pictureBox1.Width, pictureBox1.Height);
                 Refresh();
             }
             else if (e.KeyCode == Keys.D)
             {
-                foreach (Figure f in figure)
-                {
-                    if (f.DecoratorCheck())
-                    {
-                        f.move(2, 0, pictureBox1.Width, pictureBox1.Height);
-                    }
-                }
+                container.move(2, 0, pictureBox1.Width, pictureBox1.Height);
                 Refresh();
             }
             else if (e.KeyCode == Keys.W)
             {
-                foreach (Figure f in figure)
-                {
-                    if (f.DecoratorCheck())
-                    {
-                        f.move(0, -2, pictureBox1.Width, pictureBox1.Height);
-                    }
-                }
+                container.move(0, -2, pictureBox1.Width, pictureBox1.Height);
                 Refresh();
             }
             else if (e.KeyCode == Keys.S)
             {
-                foreach (Figure f in figure)
-                {
-                    if (f.DecoratorCheck())
-                    {
-                        f.move(0, 2, pictureBox1.Width, pictureBox1.Height);
-                    }
-                }
+                container.move(0, 2, pictureBox1.Width, pictureBox1.Height);
                 Refresh();
             }
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)  //описание события отпускания клавиши 
         {
-            if (chb_Ctrl.Checked == true) //описание события отпускания клавиши Control
+            if ((Control.ModifierKeys & Keys.Control) != Keys.Control && chb_Ctrl.Checked == true) //описание события отпускания клавиши Control
+            {
                 chb_Ctrl.Checked = false;
+                container.ctrlPressed = !container.ctrlPressed;
+                ctrlpress = !ctrlpress;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)  //описание события кнопки Очистить
         {
-            for (int i = 0; i < figure.Count;)
-            {
-                figure.Remove(figure[i]);
-            }
+            container.delAll();
             Refresh();
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)  //Описание события нажатия мыши
         {
-            if (chb_Ctrl.Checked == false)  //создаем новую фигуру
+            if (chb_Ctrl.Checked == false) 
             {
-                if (!ClickLine)
+                if (!ClickLine)  //создаем новую фигуру
                 {
-                    Figure newFigure = null;
-                    for (int i = 0; i < figure.Count; i++)
-                    {
-                        if (figure[i] is Decorator decorator)
-                        {
-                            figure[i] = decorator.GetOriginalFigure();
-                        }
-                        else if (figure[i].DecoratorCheck()) //выделенная группа
-                        {
-                            figure[i].UndecoratedGroup();
-                        }
-                    }
-                    switch (currentFigure)
-                    {
-                        case FigureType.Circle:
-                            newFigure = new CCircle(e.X, e.Y);
-                            break;
-                        case FigureType.Square:
-                            newFigure = new Square(e.X, e.Y);
-                            break;
-                        case FigureType.Triangle:
-                            newFigure = new Triangle(e.X, e.Y);
-                            break;
-                        default:
-                            return;
-                    }
-                    newFigure.SetColor(Color.FromName(cbColor.SelectedItem.ToString()));
-                    Figure decC = new Decorator(newFigure);
-                    figure.Add(decC);
-                    pictureBox1.Invalidate();
+                    container.unSelectAll();
+                    container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
+                    Refresh();
                 }
                 else
                 {
-                    bool q = true;
-                    for (int i = 0; i < figure.Count; i++)
+                    if (!container.isSelect(e.X, e.Y)) //при попадании в фигуру, она выделяется и возвращает true
                     {
-                        Figure f = figure[i];
-                        if (f.isClickedOnFigure(e.X, e.Y) && !f.DecoratorCheck())
-                        {
-                            q = false;
-                            Figure decoratedFigure = new Decorator(f);
-                            figure.RemoveAt(i);
-                            figure.Insert(i, decoratedFigure);
-                            break;
-                        }
-                        else if (f.isClickedOnFigure(e.X, e.Y) && f.DecoratorCheck()) { q = false; }
-                    }
-                    if (q)
-                    {
-                        Figure newFigure = null;
-                        switch (currentFigure)
-                        {
-                            case FigureType.Circle:
-                                newFigure = new CCircle(e.X, e.Y);
-                                break;
-                            case FigureType.Square:
-                                newFigure = new Square(e.X, e.Y);
-                                break;
-                            case FigureType.Triangle:
-                                newFigure = new Triangle(e.X, e.Y);
-                                break;
-                            default:
-                                return;
-                        }
-                        newFigure.SetColor(Color.FromName(cbColor.SelectedItem.ToString()));
-                        Figure decC = new Decorator(newFigure);
-                        figure.Add(decC);
-                        pictureBox1.Invalidate();
-                    }
-                    List<Figure> shape = new List<Figure>();
-                    for (int i = 0; i < figure.Count; i++)
-                    {
-                        if (figure[i] is Decorator dec)
-                        {
-                            shape.Add(dec.GetOriginalFigure());
-                        }
-                    }
-                    if (shape.Count == 2)
-                    {
-                        Line line = new Line();
-                        line.addLine(shape[0], shape[1]);
-                        figure.Add(line);
-                        //line.NotifyEveryone();
-                        //figure.RemoveAll(f => shape.Contains(f));
-                        ClickLine = false;
+                        container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
                         Refresh();
                     }
+                    if(container.AddLine()) //при успешном создании линии выдается true
+                    {
+                        ClickLine = false;
+                        Refresh();
+                    }   
                 }
             }
             else  //выделяем фигуру при отжатии Control
             {
-                for (int i = 0; i < figure.Count; i++)
-                {
-                    Figure f = figure[i];
-                    if (f.isClickedOnFigure(e.X, e.Y) && !f.DecoratorCheck())
-                    {
-                        Figure decoratedFigure = new Decorator(f);
-                        figure.RemoveAt(i);
-                        figure.Insert(i, decoratedFigure);
-                        if (!chb_flag.Checked)
-                            break;
-                    }
-                }
+                container.isSelect(e.X, e.Y);
+                Refresh();
             }
-            Refresh();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)  //Описание события Paint
         {
-            foreach (Figure f in figure)
-            {
-                f.Draw(e.Graphics);
-            }
+            container.Draw(e.Graphics);
+            Refresh();
         }
 
         private void rbCircle_CheckedChanged(object sender, EventArgs e)
         {
-            currentFigure = FigureType.Circle;
-            Refresh();
+            fType = "Circle";
         }
 
         private void rbSquare_CheckedChanged(object sender, EventArgs e)
         {
-            currentFigure = FigureType.Square;
+            fType = "Square";
             //for (int i = 0; i < figure.Count; i++)
             //{
             //    if (figure[i] is Decorator decorator)
@@ -278,12 +156,12 @@ namespace oop4_1
             //        figure.RemoveAt(i + 1);
             //    }
             //}
-            Refresh();
+            //Refresh();
         }
 
         private void rbTriangle_CheckedChanged(object sender, EventArgs e)
         {
-            currentFigure = FigureType.Triangle;
+            fType = "Triangle";
             //for (int i = 0; i < figure.Count; i++)
             //{
             //    if (figure[i] is Decorator decorator)
@@ -297,19 +175,16 @@ namespace oop4_1
             //        figure.RemoveAt(i + 1);
             //    }
             //}
-            Refresh();
+            //Refresh();
         }
 
         private void cbColor_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (Figure f in figure)
+            if(container != null)
             {
-                if (f.DecoratorCheck())
-                {
-                    f.SetColor(Color.FromName(cbColor.SelectedItem.ToString()));
-                }
+                container.SetColor(Color.FromName(cbColor.SelectedItem.ToString()));
+                Refresh();
             }
-            Refresh();
         }
 
         private void Form1_SizeChanged(object sender, EventArgs e)
@@ -325,118 +200,59 @@ namespace oop4_1
 
         private void button_dlt_Click(object sender, EventArgs e)
         {
-            int count = 0;
-            for (int i = 0; i < figure.Count;)
-            {
-                if (figure[i].DecoratorCheck())
-                {
-                    figure.RemoveAt(i);
-                    count++;
-                    continue;
-                }
-                ++i;
-            }
-            if (figure.Count != 0 && count > 0)
-            {
-                Figure decoratedFigure = new Decorator(figure.Last());
-                figure.RemoveAt(figure.Count - 1); // удалить последний элемент из списка
-                figure.Add(decoratedFigure); // добавить декорированный объект в список
-            }
+            container.delSelected();
             Refresh();
         }
 
         private void btn_notSelection_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < figure.Count; i++)
-            {
-                if (figure[i] is Decorator decorator)
-                {
-                    figure[i] = decorator.GetOriginalFigure();
-                }
-                else if (figure[i].DecoratorCheck() == true) //выделенная группа
-                {
-                    figure[i].UndecoratedGroup();
-                }
-            }
+            container.unSelectAll();
             Refresh();
         }
 
         private void btnGroup_Click(object sender, EventArgs e) //группировка
         {
-            int k = 0;
-            for (int i = 0; i < figure.Count; i++)
-            {
-                if (figure[i].DecoratorCheck())
-                {
-                    k++;
-                }
-            }
-            if (k > 1)
-            {
-                var gGroup = new GGroup();
-                for (int i = 0; i < figure.Count;)
-                {
-                    if (figure[i].DecoratorCheck())
-                    {
-                        gGroup.Add(figure[i]);
-                        figure.Remove(figure[i]);
-                    }
-                    else i++;
-                }
-                figure.Add(gGroup);
-                Refresh();
-            }
-
+            container.Compose();
+            Refresh();
         }
 
         private void btnUngroup_Click(object sender, EventArgs e) //разгруппировка
         {
-            for (int i = 0; i < figure.Count;)
-            {
-                if (figure[i] is Decorator decorator)
-                {
-                    if (decorator.GetOriginalFigure() is GGroup gGroup)
-                    {
-                        while (gGroup.Count() > 1)
-                        {
-                            figure.Add(gGroup.GetOriginalFigure());
-                            gGroup.RemoveAt();
-                        }
-                        figure.Add(gGroup.GetOriginalFigure());
-                        figure.Remove(figure[i]);
-                    }
-                }
-                ++i;
-            }
+            //for (int i = 0; i < figure.Count;)
+            //{
+            //    if (figure[i] is Decorator decorator)
+            //    {
+            //        if (decorator.GetOriginalFigure() is GGroup gGroup)
+            //        {
+            //            while (gGroup.Count() > 1)
+            //            {
+            //                figure.Add(gGroup.GetOriginalFigure());
+            //                gGroup.RemoveAt();
+            //            }
+            //            figure.Add(gGroup.GetOriginalFigure());
+            //            figure.Remove(figure[i]);
+            //        }
+            //    }
+            //    ++i;
+            //}
+            container.unCompose();
+            Refresh();
         }
 
         private void button1_Click_1(object sender, EventArgs e) //выгрузка из файла
         {
-            Method factory = new Method(); // create a new factory method object
-            ShapeArray array = new ShapeArray(); // create a new shape array object
-            array.LoadShapes(filename, factory, figure); // call the LoadShapes method with the initialized objects and figure list
+            container.Load();
             Refresh();
         }
 
         private void button2_Click(object sender, EventArgs e) //сохранение в файл
         {
-            SaveArray array = new SaveArray();
-            array.save(figure, filename);
+            container.Save();
         }
 
         private void btnLine_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < figure.Count; i++)
-            {
-                if (figure[i] is Decorator decorator)
-                {
-                    figure[i] = decorator.GetOriginalFigure();
-                }
-                else if (figure[i].DecoratorCheck() == true) //выделенная группа
-                {
-                    figure[i].UndecoratedGroup();
-                }
-            }
+            container.unSelectAll();
             Refresh();
             ClickLine = true;
         }
