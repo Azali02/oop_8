@@ -245,8 +245,14 @@ namespace oop4_1
             //treeViewObserver.ctrlPressed = !ctrlPressed;
         }
 
-        public override bool isClickedOnFigure(int X, int Y)
+        public override bool isClickedOnFigure(int x, int y)
         {
+            if (ctrlPressed == false)
+                unSelectAll();
+            if (isSelect(x, y))
+            {
+                return true;
+            }
             return false;
         }
 

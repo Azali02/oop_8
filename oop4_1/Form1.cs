@@ -104,9 +104,12 @@ namespace oop4_1
             {
                 if (!ClickLine)  //создаем новую фигуру
                 {
-                    container.unSelectAll();
-                    container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
-                    Refresh();
+                    if (!container.isClickedOnFigure(e.X, e.Y))
+                    {
+                        container.unSelectAll();
+                        container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
+                        Refresh();
+                    }
                 }
                 else
                 {
