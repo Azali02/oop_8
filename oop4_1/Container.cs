@@ -110,10 +110,10 @@ namespace oop4_1
                 {
                     shapes[i] = decorator.GetOriginalFigure();
                 }
-                else if (shapes[i].DecoratorCheck()) //выделенная группа
-                {
-                    shapes[i].UndecoratedGroup();
-                }
+                //else if (shapes[i].DecoratorCheck()) //выделенная группа
+                //{
+                //    shapes[i].UndecoratedGroup();
+                //}
             }
         }
 
@@ -200,14 +200,15 @@ namespace oop4_1
                 var gGroup = new GGroup();
                 for (int i = 0; i < shapes.Count;)
                 {
-                    if (shapes[i].DecoratorCheck())
+                    if (shapes[i] is Decorator dec)
                     {
-                        gGroup.Add(shapes[i]);
+                        gGroup.Add(dec.GetOriginalFigure());
                         shapes.Remove(shapes[i]);
                     }
                     else i++;
                 }
-                shapes.Add(gGroup);
+                Decorator dGroup = new Decorator(gGroup);
+                shapes.Add(dGroup);
                 //this.NotifyEveryone();
                 //decorator.NotifyEveryoneSelect();
             }

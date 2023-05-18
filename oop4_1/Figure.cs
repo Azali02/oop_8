@@ -19,7 +19,7 @@ namespace oop4_1
         public abstract void Draw(Graphics g); //отрисовка фигры
         public abstract bool isClickedOnFigure(int X, int Y); //определение попадания в фигуру
         public virtual bool DecoratorCheck() { return false; }
-        public virtual void UndecoratedGroup() { }
+        //public virtual void UndecoratedGroup() { }
         public virtual void SizeUp(int add, int widht, int height) { a += add; }
         public virtual void move(int add_X, int add_Y, int widht, int height)
         {

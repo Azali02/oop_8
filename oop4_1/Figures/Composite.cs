@@ -71,20 +71,20 @@ namespace oop4_1.Figures
         {
             return _gGroup[1].DecoratorCheck();
         }
-        public override void UndecoratedGroup()
-        {
-            for (int i = 0; i < _gGroup.Count; i++)
-            {
-                if (_gGroup[i] is Decorator decorator)
-                {
-                    _gGroup[i] = decorator.GetOriginalFigure();
-                }
-                else if (_gGroup[i].DecoratorCheck()) //выделенная группа
-                {
-                    _gGroup[i].UndecoratedGroup();
-                }
-            }
-        }
+        //public override void UndecoratedGroup()
+        //{
+        //    for (int i = 0; i < _gGroup.Count; i++)
+        //    {
+        //        if (_gGroup[i] is Decorator decorator)
+        //        {
+        //            _gGroup[i] = decorator.GetOriginalFigure();
+        //        }
+        //        else if (_gGroup[i].DecoratorCheck()) //выделенная группа
+        //        {
+        //            _gGroup[i].UndecoratedGroup();
+        //        }
+        //    }
+        //}
         public override void SizeUp(int add, int widht, int height)
         {
             foreach (Figure f in _gGroup)
