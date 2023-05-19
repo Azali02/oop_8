@@ -26,6 +26,7 @@ namespace oop4_1
         int countS = 1;
         int countT = 1;
         int countG = 1;
+        int countL = 1;
 
         public Container(TreeViewObserver treeViewObserver)
         {
@@ -56,12 +57,17 @@ namespace oop4_1
                     return;
             }
             newFigure.SetColor(color);
-            Figure dec = new Decorator(newFigure);
-            shapes.Add(dec);
+            newFigure.AddObserver(treeViewObserver);
+            decorator = new Decorator(newFigure);
+            shapes.Add(decorator);
             this.NotifyEveryone();
+            decorator.NotifyEveryoneSelect();
         }
 
-        public List<Figure> GetShapes() { return shapes; }
+        public List<Figure> GetShapes() 
+        { 
+            return shapes; 
+        }
 
         public bool isSelect(int x, int y)
         {
@@ -74,9 +80,9 @@ namespace oop4_1
                     q = true;
                     if (!f.DecoratorCheck())
                     {
-                        Figure decoratedFigure = new Decorator(f);
+                        decorator = new Decorator(f);
                         shapes.RemoveAt(i);
-                        shapes.Insert(i, decoratedFigure);
+                        shapes.Insert(i, decorator);
                         this.NotifyEveryone();
                         if (selectMany == false)
                             break;
@@ -99,10 +105,11 @@ namespace oop4_1
             }
             if (shapeLine.Count == 2)
             {
-                Line line = new Line();
+                Line line = new Line(countL);
                 line.addLine(shapeLine[0], shapeLine[1]);
+                line.AddObserver(treeViewObserver);
                 shapes.Add(line);
-                line.NotifyEveryone();
+                this.NotifyEveryone();
                 return true;
             }
             return false;
@@ -130,6 +137,10 @@ namespace oop4_1
             {
                 if (shapes[i].DecoratorCheck())
                 {
+                    if (shapes[i] is Line p)
+                    {
+                        p.Del();
+                    }
                     shapes.RemoveAt(i);
                     count++;
                     continue;
@@ -213,8 +224,9 @@ namespace oop4_1
                     }
                     else i++;
                 }
-                Decorator dGroup = new Decorator(gGroup);
-                shapes.Add(dGroup);
+                gGroup.AddObserver(treeViewObserver);
+                decorator = new Decorator(gGroup);
+                shapes.Add(decorator);
                 this.NotifyEveryone();
                 decorator.NotifyEveryoneSelect();
             }

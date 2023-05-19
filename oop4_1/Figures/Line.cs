@@ -12,10 +12,13 @@ namespace oop4_1.Figures
     {
         Figure shape1;
         Figure shape2;
-        public Line()
+
+        public Line(int count)
         {
             pen = new Pen(Color.Red);
             pen.DashStyle = DashStyle.Dash;
+            this.k = count;
+            this._name = "Line " + k.ToString();
         }
 
         public void addLine(Figure s1, Figure s2)
@@ -55,10 +58,10 @@ namespace oop4_1.Figures
             return;
         }
 
-        //public void Del()
-        //{
-        //    shape1.RemoveObserver();
-        //    shape2.RemoveObserver();
-        //}
+        public void Del()
+        {
+            shape1.RemoveObserver();
+            shape2.RemoveObserver();
+        }
     }
 }

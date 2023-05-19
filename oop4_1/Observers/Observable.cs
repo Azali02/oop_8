@@ -11,11 +11,13 @@ namespace oop4_1.Observers
     {
         public List<Observer> _observers = new List<Observer>();
         public string _name = "";
+        public int k;
 
         virtual public void AddObserver(Observer o)
         {
             _observers.Add(o);
         }
+
         virtual public void RemoveObserver()
         {
             _observers.Clear();
@@ -44,6 +46,7 @@ namespace oop4_1.Observers
                 o.OnSubjectMove(x, y, widht, height);
             }
         }
+
         virtual public void NotifyEveryoneSizeUp(int a, int widht, int height)
         {
             foreach (Observer o in _observers)
@@ -51,6 +54,7 @@ namespace oop4_1.Observers
                 o.OnSubjectSizeUp(a, widht, height);
             }
         }
+
         virtual public String Who()
         {
             return _name;

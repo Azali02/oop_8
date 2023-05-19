@@ -77,24 +77,25 @@ namespace oop4_1.Figures
 
         //---------------------------------------------
 
-        //override public void AddObserver(Observer o)
-        //{
-        //    _shape.AddObserver(o);
-        //}
-        //override public void RemoveObserver()
-        //{
-        //    _shape.RemoveObserver();
-        //}
+        override public void AddObserver(Observer o)
+        {
+            _shape.AddObserver(o);
+        }
 
-        //override public void NotifyEveryone()
-        //{
-        //    _shape.NotifyEveryone();
-        //}
+        override public void RemoveObserver()
+        {
+            _shape.RemoveObserver();
+        }
 
-        //override public void NotifyEveryoneSelect()
-        //{
-        //    _shape.NotifyEveryoneSelect();
-        //}
+        public override string Who()
+        {
+            return _shape.Who();
+        }
+
+        override public void NotifyEveryoneSelect()
+        {
+            _shape.NotifyEveryoneSelect();
+        }
 
         //public void OnSubjectMove(int x, int y, int widht, int height)
         //{

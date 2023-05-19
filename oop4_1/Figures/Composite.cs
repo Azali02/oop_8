@@ -9,7 +9,6 @@ namespace oop4_1.Figures
 {
     internal class GGroup : Figure
     {
-        public int k = 1;
         public List<Figure> _gGroup = new List<Figure>();
 
         public GGroup(int count) 
@@ -22,22 +21,26 @@ namespace oop4_1.Figures
         {
             _gGroup.Add(figure);
         }
-        public int Count()
-        {
-            return _gGroup.Count;
-        }
+
+        //public int Count()
+        //{
+        //    return _gGroup.Count;
+        //}
+
         public List<Figure> GetFigures()
         {
             return _gGroup;
         }
-        public Figure GetOriginalFigure()
-        {
-            return _gGroup[0];
-        }
-        public void RemoveAt()
-        {
-            _gGroup.RemoveAt(0);
-        }
+
+        //public Figure GetOriginalFigure()
+        //{
+        //    return _gGroup[0];
+        //}
+        //public void RemoveAt()
+        //{
+        //    _gGroup.RemoveAt(0);
+        //}
+
         public override void Draw(Graphics g)
         {
             foreach (Figure f in _gGroup)
@@ -45,6 +48,7 @@ namespace oop4_1.Figures
                 f.Draw(g);
             }
         }
+
         public void DrawSelected(Graphics g, Pen pp)
         {
             foreach (Figure f in _gGroup)
@@ -60,18 +64,25 @@ namespace oop4_1.Figures
                 }
             }
         }
+
         public override bool isClickedOnFigure(int X, int Y)
         {
             foreach (Figure f in _gGroup)
             {
-                if (f.isClickedOnFigure(X, Y)) return true;
+                if (f.isClickedOnFigure(X, Y))
+                {
+                    this.NotifyEveryoneSelect();
+                    return true;
+                }
             }
             return false;
         }
+
         public override bool DecoratorCheck()
         {
             return _gGroup[1].DecoratorCheck();
         }
+
         //public override void UndecoratedGroup()
         //{
         //    for (int i = 0; i < _gGroup.Count; i++)
@@ -86,6 +97,7 @@ namespace oop4_1.Figures
         //        }
         //    }
         //}
+
         public override void SizeUp(int add, int widht, int height)
         {
             foreach (Figure f in _gGroup)
@@ -93,6 +105,7 @@ namespace oop4_1.Figures
                 f.SizeUp(add, widht, height);
             }
         }
+
         public override void move(int add_X, int add_Y, int widht, int height)
         {
             foreach (Figure f in _gGroup)
@@ -100,6 +113,7 @@ namespace oop4_1.Figures
                 f.move(add_X, add_Y, widht, height);
             }
         }
+
         public override bool canMove(int add_X, int add_Y, int widht, int height)
         {
             foreach (Figure f in _gGroup)
@@ -108,6 +122,7 @@ namespace oop4_1.Figures
             }
             return false;
         }
+
         public override bool canSizeUp(int add, int widht, int height)
         {
             foreach (Figure f in _gGroup)
@@ -116,6 +131,7 @@ namespace oop4_1.Figures
             }
             return false;
         }
+
         public override void SetColor(Color color)
         {
             foreach (Figure f in _gGroup)
@@ -123,6 +139,7 @@ namespace oop4_1.Figures
                 f.pen.Color = color;
             }
         }
+
         public override void Save(string filename)
         {
             string inf = "G " + _gGroup.Count.ToString();

@@ -11,7 +11,6 @@ namespace oop4_1.Figures
     {
         private double h;
         Point[] vec = new Point[3];
-        public int k = 1;
 
         public Triangle(int x, int y, int count)
         {

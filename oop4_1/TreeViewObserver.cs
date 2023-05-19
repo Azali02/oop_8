@@ -13,6 +13,7 @@ namespace oop4_1
     {
         public bool ctrlPressed = false;
         private TreeView _treeView;
+
         public TreeViewObserver(TreeView treeView)
         {
             _treeView = treeView;
@@ -27,7 +28,7 @@ namespace oop4_1
         public void OnSubjectChanged(Observable obj)
         {
             _treeView.Nodes.Clear();
-            TreeNode tn = new TreeNode("Фигуры");
+            TreeNode tn = new TreeNode("Figures:");
             if (obj is Container o)
                 processNode(tn, o.GetShapes());
             _treeView.Nodes.Add(tn);
@@ -91,7 +92,6 @@ namespace oop4_1
         public void OnSubjectMove(int x, int y, int widht, int height)
         {
         }
-
         public void OnSubjectSizeUp(int a, int widht, int height)
         {
         }

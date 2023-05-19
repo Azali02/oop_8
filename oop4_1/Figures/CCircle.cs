@@ -6,7 +6,6 @@ namespace oop4_1.Figures
 {
     internal class CCircle : Figure
     {
-        public int k = 1;
         public CCircle(int x, int y, int count)
         {
             this.x = x;

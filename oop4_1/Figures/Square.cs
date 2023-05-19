@@ -9,7 +9,6 @@ namespace oop4_1.Figures
 {
     internal class Square : Figure
     {
-        public int k = 1;
         public Square(int x, int y, int count)
         {
             this.x = x;
