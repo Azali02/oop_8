@@ -23,27 +23,7 @@ namespace oop4_1.FactoryMethod
             reader.Close();
             stream.Close();
         }
-        public GGroup LoadGroup(string code, StreamReader reader, Method factory, int i)
-        {
-            GGroup group = new GGroup();
-            string[] words = code.Split(' ');
-            int n = int.Parse(words[1]);
-            i += n;
-            for (int j = 0; j < n; j++)
-            {
-                string _code = reader.ReadLine();
-                if (_code[0] == 'G')
-                {
-                    group.Add(LoadGroup(_code, reader, factory, j));
-                }
-                else
-                {
-                    Figure shapeGroupe = factory.CreateShape(_code);
-                    if (shapeGroupe != null) { group.Add(shapeGroupe); }
-                }
-            }
-            return group;
-        }
+        
         public void Load(int count, StreamReader reader, Method factory, List<Figure> figure)
         {
             for (int i = 0; i < count; i++)

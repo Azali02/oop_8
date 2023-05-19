@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace oop4_1
 {
@@ -18,20 +19,20 @@ namespace oop4_1
         private List<Figure> shapes;
         public bool ctrlPressed = false;
         public bool selectMany = false;
-        //public Decorator decorator;
-        //private TreeViewObserver treeViewObserver;
+        public Decorator decorator;
+        private TreeViewObserver treeViewObserver;
 
-        //public Container(TreeViewObserver treeViewObserver)
-        //{
-        //    shapes = new List<Figure>();
-        //    this.treeViewObserver = treeViewObserver;
-        //    treeViewObserver.AddObserver(this);
-        //    this.AddObserver(treeViewObserver);
-        //}
+        int countC = 1;
+        int countS = 1;
+        int countT = 1;
+        int countG = 1;
 
-        public Container()
+        public Container(TreeViewObserver treeViewObserver)
         {
             shapes = new List<Figure>();
+            this.treeViewObserver = treeViewObserver;
+            treeViewObserver.AddObserver(this);
+            this.AddObserver(treeViewObserver);
         }
 
         public void Add(int x, int y, string fType, Color color)
@@ -40,13 +41,16 @@ namespace oop4_1
             switch (fType)
             {
                 case "Circle":
-                    newFigure = new CCircle(x, y);
+                    newFigure = new CCircle(x, y, countC);
+                    countC++;
                     break;
                 case "Square":
-                    newFigure = new Square(x, y);
+                    newFigure = new Square(x, y, countS);
+                    countS++;
                     break;
                 case "Triangle":
-                    newFigure = new Triangle(x, y);
+                    newFigure = new Triangle(x, y, countT);
+                    countT++;
                     break;
                 default:
                     return;
@@ -54,8 +58,10 @@ namespace oop4_1
             newFigure.SetColor(color);
             Figure dec = new Decorator(newFigure);
             shapes.Add(dec);
-            //this.NotifyEveryone();
+            this.NotifyEveryone();
         }
+
+        public List<Figure> GetShapes() { return shapes; }
 
         public bool isSelect(int x, int y)
         {
@@ -71,7 +77,7 @@ namespace oop4_1
                         Figure decoratedFigure = new Decorator(f);
                         shapes.RemoveAt(i);
                         shapes.Insert(i, decoratedFigure);
-                        //this.NotifyEveryone();
+                        this.NotifyEveryone();
                         if (selectMany == false)
                             break;
                         continue;
@@ -96,7 +102,7 @@ namespace oop4_1
                 Line line = new Line();
                 line.addLine(shapeLine[0], shapeLine[1]);
                 shapes.Add(line);
-                //line.NotifyEveryone();
+                line.NotifyEveryone();
                 return true;
             }
             return false;
@@ -130,7 +136,7 @@ namespace oop4_1
                 }
                 ++i;
             }
-            //this.NotifyEveryone();
+            this.NotifyEveryone();
         }
 
         public void delAll()
@@ -139,7 +145,7 @@ namespace oop4_1
             {
                 shapes.Remove(shapes[i]);
             }
-            //this.NotifyEveryone();
+            this.NotifyEveryone();
         }
 
         public override void Draw(Graphics g)
@@ -197,7 +203,7 @@ namespace oop4_1
             }
             if (k > 1)
             {
-                var gGroup = new GGroup();
+                var gGroup = new GGroup(countG);
                 for (int i = 0; i < shapes.Count;)
                 {
                     if (shapes[i] is Decorator dec)
@@ -209,8 +215,8 @@ namespace oop4_1
                 }
                 Decorator dGroup = new Decorator(gGroup);
                 shapes.Add(dGroup);
-                //this.NotifyEveryone();
-                //decorator.NotifyEveryoneSelect();
+                this.NotifyEveryone();
+                decorator.NotifyEveryoneSelect();
             }
         }
 
@@ -236,13 +242,13 @@ namespace oop4_1
                 }
                 i++;
             }
-            //this.NotifyEveryone();
+            this.NotifyEveryone();
         }
 
         public void ctrlChange()
         {
             ctrlPressed = !ctrlPressed;
-            //treeViewObserver.ctrlPressed = !ctrlPressed;
+            treeViewObserver.ctrlPressed = !ctrlPressed;
         }
 
         public override bool isClickedOnFigure(int x, int y)
@@ -267,6 +273,27 @@ namespace oop4_1
             Method factory = new Method(); // create a new factory method object
             ShapeArray array = new ShapeArray(); // create a new shape array object
             array.LoadShapes(filename, factory, shapes); // call the LoadShapes method with the initialized objects and figure list
+        }
+
+        public void OnSubjectChanged(Observable who)
+        {
+            string name = treeViewObserver.getNameSelected();
+
+            int i = 0;
+            if (ctrlPressed == false)
+                unSelectAll();
+            for (; i < shapes.Count;)
+            {
+
+                if (shapes[i] is Decorator == false && shapes[i].Who() == name)
+                {
+                    decorator = new Decorator(shapes[i]);
+                    shapes.Add(decorator);
+                    shapes.RemoveAt(i);
+                    break;
+                }
+                i++;
+            }
         }
     }
 }

@@ -7,13 +7,13 @@ namespace oop4_1.Figures
     internal class CCircle : Figure
     {
         public int k = 1;
-        public CCircle(int x, int y)
+        public CCircle(int x, int y, int count)
         {
             this.x = x;
             this.y = y;
             pen = new Pen(Color.Red, 3);
+            this.k = count;
             this._name = "Circle " + k.ToString();
-            this.k += 1;
         }
         public override void Draw(Graphics g)  //отрисовка круга
         {

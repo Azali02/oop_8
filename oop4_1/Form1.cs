@@ -22,7 +22,7 @@ namespace oop4_1
         //private string filename = "C:/Users/Азалия/source/repos/oop4_1/oop4_1/FactoryMethod/save_figures.txt";
 
         Container container;
-        //TreeViewObserver observer;
+        TreeViewObserver observer;
         bool ctrlpress = false;// флажок зажатия контрола
         bool ClickLine = false;
         string fType = "Circle";
@@ -32,9 +32,9 @@ namespace oop4_1
             InitializeComponent();
             cbColor.SelectedIndex = 0;
 
-            //observer = new TreeViewObserver(shapeTree);
-            //container = new Container(observer);
-            container = new Container();
+            observer = new TreeViewObserver(treeFigures);
+            container = new Container(observer);
+            //container = new Container();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)  //описание события нажатия клавиши на клавиатуре
@@ -61,7 +61,7 @@ namespace oop4_1
                 Refresh();
             }
             else if (e.KeyCode == Keys.A)
-            {      
+            {
                 container.move(-2, 0, pictureBox1.Width, pictureBox1.Height);
                 Refresh();
             }
@@ -100,11 +100,11 @@ namespace oop4_1
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)  //Описание события нажатия мыши
         {
-            if (chb_Ctrl.Checked == false) 
+            if (chb_Ctrl.Checked == false)
             {
                 if (!ClickLine)  //создаем новую фигуру
                 {
-                    if (!container.isClickedOnFigure(e.X, e.Y))
+                    if (!container.isClickedOnFigure(e.X, e.Y)) //при попадании в фигуру, она выделяется (остальные выделения пропадают) и возвращает true 
                     {
                         container.unSelectAll();
                         container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
@@ -118,11 +118,11 @@ namespace oop4_1
                         container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
                         Refresh();
                     }
-                    if(container.AddLine()) //при успешном создании линии выдается true
+                    if (container.AddLine()) //при успешном создании линии выдается true
                     {
                         ClickLine = false;
                         Refresh();
-                    }   
+                    }
                 }
             }
             else  //выделяем фигуру при отжатии Control
@@ -183,7 +183,7 @@ namespace oop4_1
 
         private void cbColor_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(container != null)
+            if (container != null)
             {
                 container.SetColor(Color.FromName(cbColor.SelectedItem.ToString()));
                 Refresh();
@@ -245,6 +245,7 @@ namespace oop4_1
         private void button1_Click_1(object sender, EventArgs e) //выгрузка из файла
         {
             container.Load();
+            container.NotifyEveryone();
             Refresh();
         }
 
@@ -258,6 +259,14 @@ namespace oop4_1
             container.unSelectAll();
             Refresh();
             ClickLine = true;
+        }
+
+        private void treeFigures_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            observer.NotifyEveryone();
+            if (ctrlpress == false)
+                observer.whiteColor();
+            e.Node.BackColor = Color.Gray;
         }
     }
 }

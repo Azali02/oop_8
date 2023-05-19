@@ -13,13 +13,13 @@ namespace oop4_1.Figures
         Point[] vec = new Point[3];
         public int k = 1;
 
-        public Triangle(int x, int y)
+        public Triangle(int x, int y, int count)
         {
             this.x = x;
             this.y = y;
             pen = new Pen(Color.Red, 3);
+            this.k = count;
             this._name = "Triangle " + k.ToString();
-            this.k += 1;
         }
         public override void Draw(Graphics g)
         {

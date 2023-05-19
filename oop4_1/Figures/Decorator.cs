@@ -70,6 +70,11 @@ namespace oop4_1.Figures
             _shape.Save(filename);
         }
 
+        override public void NotifyEveryone()
+        {
+            _shape.NotifyEveryone();
+        }
+
         //---------------------------------------------
 
         //override public void AddObserver(Observer o)

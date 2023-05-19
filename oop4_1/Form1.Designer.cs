@@ -43,6 +43,7 @@
             button1 = new Button();
             button2 = new Button();
             btnLine = new Button();
+            treeFigures = new TreeView();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -207,12 +208,21 @@
             btnLine.UseVisualStyleBackColor = true;
             btnLine.Click += btnLine_Click;
             // 
+            // treeFigures
+            // 
+            treeFigures.Location = new Point(778, 102);
+            treeFigures.Name = "treeFigures";
+            treeFigures.Size = new Size(192, 339);
+            treeFigures.TabIndex = 15;
+            treeFigures.NodeMouseClick += treeFigures_NodeMouseClick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AntiqueWhite;
-            ClientSize = new Size(782, 453);
+            ClientSize = new Size(982, 453);
+            Controls.Add(treeFigures);
             Controls.Add(btnLine);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -256,5 +266,6 @@
         private Button button1;
         private Button button2;
         private Button btnLine;
+        private TreeView treeFigures;
     }
 }

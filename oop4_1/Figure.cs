@@ -58,7 +58,7 @@ namespace oop4_1
         
         public void OnSubjectChanged(Observable who)
         {
-            //this.x = (Figure)who.x;
+            return;
         }
 
         public void OnSubjectSelect(Observable who)

@@ -11,10 +11,11 @@ namespace oop4_1.Figures
     {
         public int k = 1;
         public List<Figure> _gGroup = new List<Figure>();
-        public GGroup() 
+
+        public GGroup(int count) 
         {
+            this.k = count;
             this._name = "Group " + k.ToString();
-            this.k += 1;
         }
 
         public void Add(Figure figure)

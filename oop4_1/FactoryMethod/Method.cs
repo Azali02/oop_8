@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,11 @@ namespace oop4_1.FactoryMethod
 {
     internal class Method
     {
+        int countC = 1;
+        int countS = 1;
+        int countT = 1;
+        int countG = 1;
+
         public virtual Figure CreateShape(string code)
         {
             Figure shape = null;
@@ -16,7 +22,8 @@ namespace oop4_1.FactoryMethod
             char f = char.Parse(words[0]);
             if ( f == 'G')
             {
-                shape = new GGroup();
+                shape = new GGroup(countG);
+                countG++;
                 return shape;
             }
             int x = int.Parse(words[1]);
@@ -47,13 +54,16 @@ namespace oop4_1.FactoryMethod
             switch (f)
             {
                 case 'C':
-                    shape = new CCircle(x, y);
+                    shape = new CCircle(x, y, countC);
+                    countC++;
                     break;
                 case 'S':
-                    shape = new Square(x, y);
+                    shape = new Square(x, y, countS);
+                    countS++;
                     break;
                 case 'T':
-                    shape = new Triangle(x, y);
+                    shape = new Triangle(x, y, countT);
+                    countT++;
                     break;
                 default:
                     break;
@@ -61,6 +71,29 @@ namespace oop4_1.FactoryMethod
             shape.a = a;
             shape.pen.Color = color;
             return shape;
+        }
+
+        public GGroup LoadGroup(string code, StreamReader reader, Method factory, int i)
+        {
+            GGroup group = new GGroup(countG);
+            countG++;
+            string[] words = code.Split(' ');
+            int n = int.Parse(words[1]);
+            i += n;
+            for (int j = 0; j < n; j++)
+            {
+                string _code = reader.ReadLine();
+                if (_code[0] == 'G')
+                {
+                    group.Add(LoadGroup(_code, reader, factory, j));
+                }
+                else
+                {
+                    Figure shapeGroupe = factory.CreateShape(_code);
+                    if (shapeGroupe != null) { group.Add(shapeGroupe); }
+                }
+            }
+            return group;
         }
     }
 }
