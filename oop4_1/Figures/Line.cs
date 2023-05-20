@@ -10,8 +10,9 @@ namespace oop4_1.Figures
 {
     internal class Line : Figure
     {
-        Figure shape1;
-        Figure shape2;
+        public Figure shape1;
+        public Figure shape2;
+        public bool dec = false;
 
         public Line(int count)
         {
@@ -43,10 +44,17 @@ namespace oop4_1.Figures
         //    R = int.Parse(values[2]);
         //    Colored = char.Parse(values[3]);
         //}
-        public override bool isClickedOnFigure(int X, int Y)
+
+        public override bool isClickedOnFigure(int x, int y)
         {
             return false;
         }
+
+        public override bool DecoratorCheck()
+        {
+            return dec;
+        }
+
         override public void Draw(Graphics g)
         {
             Point startPoint = new Point(shape1.x, shape1.y);
@@ -62,6 +70,7 @@ namespace oop4_1.Figures
         {
             shape1.RemoveObserver();
             shape2.RemoveObserver();
+            this.RemoveObserver();
         }
     }
 }

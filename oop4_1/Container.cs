@@ -69,6 +69,19 @@ namespace oop4_1
             return shapes; 
         }
 
+        public List<Line> GetLines()
+        {
+            List<Line> lines = new List<Line>();
+            foreach (Figure f in shapes)
+            {
+                if (f is Line l)
+                {
+                    lines.Add(l);
+                }
+            }
+            return lines;
+        }
+
         public bool isSelect(int x, int y)
         {
             bool q = false;
@@ -80,6 +93,19 @@ namespace oop4_1
                     q = true;
                     if (!f.DecoratorCheck())
                     {
+                        List<Line> ll = GetLines();
+                        foreach (Line line in ll)
+                        {
+                            if (line.shape1 == shapes[i])
+                            {
+                                line.dec = true;
+                            }
+                            else if (line.shape2 == shapes[i])
+                            {
+                                line.dec = true;
+                            }
+                        }
+
                         decorator = new Decorator(f);
                         shapes.RemoveAt(i);
                         shapes.Insert(i, decorator);
@@ -117,6 +143,11 @@ namespace oop4_1
 
         public void unSelectAll()
         {
+            List<Line> ll = GetLines();
+            foreach (Line line in ll)
+            {
+                line.dec = false;
+            }
             for (int i = 0; i < shapes.Count; ++i)
             {
                 if (shapes[i] is Decorator decorator)
@@ -132,7 +163,7 @@ namespace oop4_1
 
         public void delSelected()
         {
-            int count = 0;
+            //int count = 0;
             for (int i = 0; i < shapes.Count;)
             {
                 if (shapes[i].DecoratorCheck())
@@ -141,8 +172,9 @@ namespace oop4_1
                     {
                         p.Del();
                     }
+
                     shapes.RemoveAt(i);
-                    count++;
+                    //count++;
                     continue;
                 }
                 ++i;
@@ -207,7 +239,7 @@ namespace oop4_1
             int k = 0;
             for (int i = 0; i < shapes.Count; i++)
             {
-                if (shapes[i].DecoratorCheck())
+                if (shapes[i] is Decorator dec)
                 {
                     k++;
                 }
@@ -274,8 +306,19 @@ namespace oop4_1
             return false;
         }
 
+        public void delAllLine()
+        {
+            List<Line> ll = GetLines();
+            foreach (Line line in ll)
+            {
+                line.Del();  //а надо ли?
+                shapes.Remove(line);
+            }
+        }
+
         public void Save()
         {
+            delAllLine();
             SaveArray array = new SaveArray();
             array.save(shapes, filename);
         }

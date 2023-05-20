@@ -27,11 +27,11 @@ namespace oop4_1.Figures
         public override void Draw(Graphics g)
         {
             _shape.Draw(g);
-            if (_shape is GGroup gGroup)
-            {
-                gGroup.DrawSelected(g, pp);
-            }
-            else g.DrawRectangle(pp, _shape.x - a / 2, _shape.y - a / 2, a, a);
+                if (_shape is GGroup gGroup)
+                {
+                    gGroup.DrawSelected(g, pp);
+                }
+                else g.DrawRectangle(pp, _shape.x - a / 2, _shape.y - a / 2, a, a);
         }
         public override bool isClickedOnFigure(int X, int Y)
         {
