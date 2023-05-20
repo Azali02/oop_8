@@ -53,32 +53,32 @@ namespace oop4_1
             else if (e.KeyCode == Keys.Z) //уменьшение выделенных объектов
             {
                 container.SizeUp(-2, pictureBox1.Width, pictureBox1.Height);
-                Refresh();
+                pictureBox1.Invalidate();
             }
             else if (e.KeyCode == Keys.X) //увеличение выделенных объектов
             {
                 container.SizeUp(2, pictureBox1.Width, pictureBox1.Height);
-                Refresh();
+                pictureBox1.Invalidate();
             }
             else if (e.KeyCode == Keys.A)
             {
                 container.move(-2, 0, pictureBox1.Width, pictureBox1.Height);
-                Refresh();
+                pictureBox1.Invalidate();
             }
             else if (e.KeyCode == Keys.D)
             {
                 container.move(2, 0, pictureBox1.Width, pictureBox1.Height);
-                Refresh();
+                pictureBox1.Invalidate();
             }
             else if (e.KeyCode == Keys.W)
             {
                 container.move(0, -2, pictureBox1.Width, pictureBox1.Height);
-                Refresh();
+                pictureBox1.Invalidate();
             }
             else if (e.KeyCode == Keys.S)
             {
                 container.move(0, 2, pictureBox1.Width, pictureBox1.Height);
-                Refresh();
+                pictureBox1.Invalidate();
             }
         }
 
@@ -116,7 +116,7 @@ namespace oop4_1
                     if (!container.isSelect(e.X, e.Y)) //при попадании в фигуру, она выделяется и возвращает true
                     {
                         container.Add(e.X, e.Y, fType, Color.FromName(cbColor.SelectedItem.ToString()));
-                        Refresh();
+                        pictureBox1.Invalidate();
                     }
                     if (container.AddLine()) //при успешном создании линии выдается true
                     {
@@ -128,14 +128,14 @@ namespace oop4_1
             else  //выделяем фигуру при отжатии Control
             {
                 container.isSelect(e.X, e.Y);
-                Refresh();
+                pictureBox1.Invalidate();
             }
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)  //Описание события Paint
         {
             container.Draw(e.Graphics);
-            Refresh();
+            pictureBox1.Invalidate();
         }
 
         private void rbCircle_CheckedChanged(object sender, EventArgs e)
@@ -186,7 +186,7 @@ namespace oop4_1
             if (container != null)
             {
                 container.SetColor(Color.FromName(cbColor.SelectedItem.ToString()));
-                Refresh();
+                pictureBox1.Invalidate();
             }
         }
 
@@ -257,8 +257,8 @@ namespace oop4_1
         private void btnLine_Click(object sender, EventArgs e)
         {
             container.unSelectAll();
-            Refresh();
             ClickLine = true;
+            pictureBox1.Invalidate();
         }
 
         private void treeFigures_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -267,6 +267,7 @@ namespace oop4_1
             if (ctrlpress == false)
                 observer.whiteColor();
             e.Node.BackColor = Color.Gray;
+            Refresh();
         }
     }
 }
